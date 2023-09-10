@@ -20,7 +20,7 @@ CREATE TABLE "Store" (
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" INTEGER,
 
     CONSTRAINT "Store_pkey" PRIMARY KEY ("id")
 );
@@ -33,10 +33,10 @@ CREATE TABLE "Product" (
     "price" DECIMAL(65,30) NOT NULL DEFAULT 0,
     "images" JSONB,
     "category" "Category" NOT NULL DEFAULT 'SHIRTS',
-    "invetory" INTEGER NOT NULL DEFAULT 0,
+    "inventory" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "storeId" INTEGER NOT NULL,
+    "storeId" INTEGER,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -45,7 +45,7 @@ CREATE TABLE "Product" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Store" ADD CONSTRAINT "Store_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Store" ADD CONSTRAINT "Store_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE SET NULL ON UPDATE CASCADE;
