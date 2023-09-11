@@ -1,27 +1,46 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient({
   log: ['error'],
 });
 
+const roundsOfHashing = 10;
+
 async function seed() {
+  const passwordUser1 = await bcrypt.hash('shopbee@123', roundsOfHashing);
+  const passwordUser2 = await bcrypt.hash('shopbee@123', roundsOfHashing);
+
   // Create users
-  const userCount = 5;
   const users = [];
-  for (let i = 0; i < userCount; i++) {
-    const user = await prisma.user.create({
-      data: {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        stores: {
-          create: [],
-        },
-      },
-    });
-    users.push(user);
-  }
+  const user1 = await prisma.user.upsert({
+    where: { email: 'user1@gmail.com' },
+    update: {
+      password: passwordUser1,
+    },
+    create: {
+      email: 'user1@gmail.com',
+      name: 'User 1',
+      password: passwordUser1,
+    },
+  });
+
+  users.push(user1);
+
+  const user2 = await prisma.user.upsert({
+    where: { email: 'user2@gamil.com' },
+    update: {
+      password: passwordUser2,
+    },
+    create: {
+      email: 'user2@gamil.com',
+      name: 'User 2',
+      password: passwordUser2,
+    },
+  });
+
+  users.push(user2);
 
   const stores = [];
   // Create stores and products

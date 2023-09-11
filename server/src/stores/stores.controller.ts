@@ -21,34 +21,35 @@ export class StoresController {
 
   @Post()
   @ApiCreatedResponse({ type: StoreEntity })
-  create(@Body() createStoreDto: CreateStoreDto) {
-    return this.storesService.create(createStoreDto);
+  async create(@Body() createStoreDto: CreateStoreDto) {
+    return new StoreEntity(await this.storesService.create(createStoreDto));
   }
 
   @Get()
   @ApiOkResponse({ type: StoreEntity, isArray: true })
-  findAll() {
-    return this.storesService.findAll();
+  async findAll() {
+    const stores = await this.storesService.findAll();
+    return stores.map((store) => new StoreEntity(store));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: StoreEntity })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.storesService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new StoreEntity(await this.storesService.findOne(id));
   }
 
   @Patch(':id')
   @ApiCreatedResponse({ type: StoreEntity })
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateStoreDto: UpdateStoreDto,
   ) {
-    return this.storesService.update(id, updateStoreDto);
+    return new StoreEntity(await this.storesService.update(id, updateStoreDto));
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: StoreEntity })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.storesService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return new StoreEntity(await this.storesService.remove(id));
   }
 }

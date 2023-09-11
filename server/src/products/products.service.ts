@@ -10,11 +10,18 @@ export class ProductsService {
   create(createProductDto: CreateProductDto) {
     return this.prisma.product.create({
       data: createProductDto,
+      include: {
+        store: true,
+      },
     });
   }
 
   findAll() {
-    return this.prisma.product.findMany();
+    return this.prisma.product.findMany({
+      include: {
+        store: true,
+      },
+    });
   }
 
   findOne(id: number) {
@@ -32,6 +39,9 @@ export class ProductsService {
         id,
       },
       data: updateProductDto,
+      include: {
+        store: true,
+      },
     });
   }
 
@@ -39,6 +49,9 @@ export class ProductsService {
     return this.prisma.product.delete({
       where: {
         id,
+      },
+      include: {
+        store: true,
       },
     });
   }
