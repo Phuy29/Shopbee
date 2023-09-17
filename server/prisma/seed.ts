@@ -66,7 +66,9 @@ async function seed() {
         data: {
           name: faker.commerce.productName(),
           description: faker.lorem.sentence(),
-          price: parseFloat(faker.commerce.price()),
+          price: parseFloat(
+            faker.commerce.price({ min: 100, max: 200, dec: 0, symbol: '$' }),
+          ),
           images: [faker.image.url()],
           storeId: store.id,
         },

@@ -39,7 +39,7 @@ model Product {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  price       Decimal  @default(0)
+  price       Float    @default(0)
   images      Json?
   category    Category @default(SHIRTS)
   inventory   Int      @default(0)

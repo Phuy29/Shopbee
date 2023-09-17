@@ -12,7 +12,8 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ProductEntity } from './entities/product.entity';
 
 @Controller('products')
 @ApiTags('products')
@@ -20,13 +21,16 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    const product = await this.productsService.create(createProductDto);
+    return new ProductEntity(product);
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  @ApiOkResponse({ type: ProductEntity, isArray: true })
+  async findAll() {
+    const products = await this.productsService.findAll();
+    return products.map((product) => new ProductEntity(product));
   }
 
   @Get(':id')
@@ -35,7 +39,7 @@ export class ProductsController {
     if (!product) {
       throw new NotFoundException(`Product with ${id} does not exist.`);
     }
-    return product;
+    return new ProductEntity(product);
   }
 
   @Patch(':id')
@@ -47,7 +51,7 @@ export class ProductsController {
     if (!product) {
       throw new NotFoundException(`Product with ${id} does not exist.`);
     }
-    return product;
+    return new ProductEntity(product);
   }
 
   @Delete(':id')
@@ -56,6 +60,6 @@ export class ProductsController {
     if (!product) {
       throw new NotFoundException(`Product with ${id} does not exist.`);
     }
-    return product;
+    return new ProductEntity(product);
   }
 }
